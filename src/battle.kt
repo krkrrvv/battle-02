@@ -6,19 +6,24 @@ fun main() {
 //
 //    printField(playerField, "Ваше поле")
 //    printField(enemyField, "Поле противника", showShips = false)
+    val player = Player()
+    player.name = "Вы"
 
-    val playerField = createEmptyField(13)
-    playerField[3][2] = '#'
-    playerField[3][3] = '#'
+    player.registerShot(true)    // попал
+    player.registerShot(false)   // промах
+    player.registerShot(true)    // попал
 
-    val enemyField = createEmptyField(13)
-    enemyField[5][3] = '#'
-    enemyField[5][5] = 'X'
+    println(player.status())
 
-    printField(playerField, "Ваше поле", debug = true)
+    player.takeDamage()
+    player.takeDamage()
+    println(player.shipsLeft)    // 18
+    println(player.isAlive())    // true
 
-    printBothFields(playerField, enemyField)
+    player.reset()
+    println(player.status())
 }
+
 fun createEmptyField(size: Int = 10): Array<CharArray> {
     return Array(size) { CharArray(size) { '.' } }
 }
@@ -60,12 +65,12 @@ fun printField(field: Array<CharArray>, title: String, showShips: Boolean = true
         }
     }
 }
-fun printBothFields(player: Array<CharArray>, enemy: Array<CharArray>, showEnemyShips: Boolean = false) {
-    if (player.size != enemy.size) {
+fun printBothFields(player: Player, enemy: Player, showEnemyShips: Boolean = false) {
+    if (player.field.size != enemy.field.size) {
         print("Ошибка! Поля должны быть одинакового размера!")
         return
     }
-    val size = player.size
+    val size = player.field.size
     println("=== Ваше поле ===               === Поле противника ===")
     print("   ")
     for (c in 0 until size) print("$c ")
@@ -76,11 +81,11 @@ fun printBothFields(player: Array<CharArray>, enemy: Array<CharArray>, showEnemy
 
     for(r in 0 until size) {
         print("$r  ")
-        for(c in 0 until size) print("${player[r][c]} ")
+        for(c in 0 until size) print("${player.field[r][c]} ")
         print("     ")
         print("$r  ")
         for(c in 0 until size) {
-            val a1 = enemy[r][c]
+            val a1 = enemy.field[r][c]
             val show = when {
                 !showEnemyShips && a1 == '#' -> '.'
                 else -> a1
