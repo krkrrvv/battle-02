@@ -22,6 +22,7 @@ fun main() {
 
     player.reset()
     println(player.status())
+
 }
 
 fun createEmptyField(size: Int = 10): Array<CharArray> {
